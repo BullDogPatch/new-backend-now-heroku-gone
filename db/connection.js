@@ -17,31 +17,7 @@ if (ENV === 'production') {
   config.ssl = {
     rejectUnauthorized: false,
   };
-  config.max = 2;
+  config.max = 2; // Limit the pool size if necessary
 }
 
-const pool = new Pool(config);
-
-pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-});
-
-pool.connect((err, client, release) => {
-  if (err) {
-    console.error('Error acquiring client', err.stack);
-    process.exit(1);
-  } else {
-    console.log('Connected to database');
-    client.query('SELECT NOW()', (err, result) => {
-      release();
-      if (err) {
-        console.error('Error executing query', err.stack);
-      } else {
-        console.log(result.rows);
-      }
-      process.exit(0);
-    });
-  }
-});
-
-module.exports = pool;
+module.exports = new Pool(config);
