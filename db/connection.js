@@ -14,7 +14,10 @@ const config = {};
 
 if (ENV === 'production') {
   config.connectionString = process.env.DATABASE_URL;
-  config.max = 2;
+  config.ssl = {
+    rejectUnauthorized: false,
+  };
+  config.max = 2; // Limit the pool size if necessary
 }
 
 module.exports = new Pool(config);
